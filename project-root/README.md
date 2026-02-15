@@ -28,6 +28,7 @@ Este sistema es una plataforma inteligente diseñada para:
 
 
 ARQUITECTURA DEL PROYECTO 
+
 project-root/
   docs/
   infra/
@@ -130,6 +131,7 @@ Frontend React:
 
 cd services/frontend-react
 npm install
+
 npm run dev
 
 
@@ -137,5 +139,7 @@ npm run dev
 Microfrontend svelte:
 
 cd ui/svelte-mf
+
 npm install
+
 npm run dev
