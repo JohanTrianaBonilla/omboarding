@@ -1,0 +1,13 @@
+# INSIGHT GENERATOR v1
+
+Tu tarea es generar un resumen profesional del candidato basado en:
+- Su perfil principal
+- Los perfiles similares encontrados
+- El puntaje de compatibilidad respecto al cargo
+- Lenguaje claro, profesional y orientado a RRHH
+
+Formato del Insight:
+1. Resumen del candidato
+2. Tecnologías o fortalezas clave
+3. Brechas importantes para el cargo
+4. Evaluación final (1 a 100)

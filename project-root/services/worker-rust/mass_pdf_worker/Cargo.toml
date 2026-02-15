@@ -1,0 +1,12 @@
+[package]
+name = "mass_pdf_worker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rayon = "1.7"                   # Paralelismo seguro y rápido
+reqwest = { version = "0.11", features = ["json", "blocking"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+walkdir = "2.3"                 # Para recorrer carpetas
+anyhow = "1.0"                  # Manejo de errores elegante

@@ -1,0 +1,5 @@
+Flask
+qdrant-client
+sentence-transformers
+torch
+numpy
