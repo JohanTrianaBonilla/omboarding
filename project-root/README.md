@@ -1,5 +1,7 @@
 Candidate Intelligence System
+
 FastAPI + Flask AI + Qdrant + ETL + Rust Worker + React + Svelte MF
+
 🚀 Descripción del Proyecto
 
 Este sistema es una plataforma inteligente diseñada para:
@@ -109,6 +111,7 @@ levanta:
 
 Búsqueda Semántica: 
 
+
 POST http://localhost:8000/search/semantic-search
 {
   "query": "python backend senior"
@@ -124,13 +127,15 @@ POST http://localhost:8000/insights
 
 
 Frontend React: 
+
 cd services/frontend-react
 npm install
 npm run dev
 
 
 
-Microfrontend svelte: 
+Microfrontend svelte:
+
 cd ui/svelte-mf
 npm install
 npm run dev
