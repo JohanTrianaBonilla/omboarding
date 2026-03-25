@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import CandidateList from "./pages/CandidateList";
+import Navbar from "./components/Navbar";
 import CandidateCreate from "./pages/CandidateCreate";
 import CandidateEdit from "./pages/CandidateEdit";
+import CandidateList from "./pages/CandidateList";
+import Microfrontend from "./pages/Microfrontend";
 import Search from "./pages/Search";
 import UploadPDF from "./pages/UploadPDF";
 
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/edit/:id" element={<CandidateEdit />} />
         <Route path="/search" element={<Search />} />
         <Route path="/upload" element={<UploadPDF />} />
+        <Route path="/microfrontend" element={<Microfrontend />} />
       </Routes>
     </BrowserRouter>
   );

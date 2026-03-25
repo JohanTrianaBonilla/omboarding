@@ -5,8 +5,9 @@ export default function Navbar() {
     <nav style={styles.nav}>
       <Link to="/" style={styles.link}>Lista de Candidatos</Link>
       <Link to="/create" style={styles.link}>Crear Candidato</Link>
-      <Link to="/search" style={styles.link}>Búsqueda Semántica</Link>
+      <Link to="/search" style={styles.link}>Busqueda Semantica</Link>
       <Link to="/upload" style={styles.link}>Subir PDF</Link>
+      <Link to="/microfrontend" style={styles.link}>Svelte MF</Link>
     </nav>
   );
 }
@@ -17,11 +18,11 @@ const styles = {
     gap: "20px",
     padding: "10px",
     background: "#eee",
-    borderBottom: "1px solid #ccc"
+    borderBottom: "1px solid #ccc",
   },
   link: {
     textDecoration: "none",
     fontWeight: "bold",
-    color: "#333"
-  }
+    color: "#333",
+  },
 };

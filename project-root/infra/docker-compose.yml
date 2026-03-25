@@ -1,7 +1,6 @@
 version: "3.9"
 
 services:
-
   db:
     image: postgres:15
     container_name: postgres_db
@@ -14,19 +13,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  api:
-    build: ../services/api-fastapi
-    container_name: fastapi_service
-    depends_on:
-      - db
-      - flask
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant_service
     environment:
-      DATABASE_URL: ${DATABASE_URL}
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      FLASK_SEARCH_URL: ${FLASK_SEARCH_URL}
-      FLASK_EMBED_URL: ${FLASK_EMBED_URL}
+      QDRANT__STORAGE__PATH: "/qdrant/storage"
     ports:
-      - "8000:8000"
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
 
   flask:
     build: ../services/api-flask
@@ -40,40 +35,56 @@ services:
     ports:
       - "5001:5001"
 
-  qdrant:
-    image: qdrant/qdrant
-    container_name: qdrant_service
+  api:
+    build: ../services/api-fastapi
+    container_name: fastapi_service
+    depends_on:
+      - db
+      - flask
     environment:
-      QDRANT__STORAGE__PATH: "/qdrant/storage"
-    ports:
-      - "6333:6333"
+      DATABASE_URL: ${DATABASE_URL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      FLASK_SEARCH_URL: ${FLASK_SEARCH_URL}
+      FLASK_EMBED_URL: ${FLASK_EMBED_URL}
+      FASTAPI_URL: ${FASTAPI_URL}
     volumes:
-      - qdrant_data:/qdrant/storage
+      - ../pipelines/etl/pdfs:/pdfs
+    ports:
+      - "8000:8000"
 
-svelte-mf:
-  build: ../ui/svelte-mf
-  container_name: svelte_mf
-  ports:
-    - "5173:5173"
-  environment:
-    VITE_API_URL: http://api:8000
-  depends_on:
-    - api
+  react:
+    build: ../services/frontend-react
+    container_name: react_app
+    depends_on:
+      - api
+      - svelte-mf
+    environment:
+      VITE_API_URL: http://localhost:8000
+      VITE_SVELTE_MF_URL: http://localhost:5174
+    ports:
+      - "5173:5173"
 
+  svelte-mf:
+    build: ../ui/svelte-mf
+    container_name: svelte_mf
+    depends_on:
+      - api
+    environment:
+      VITE_API_URL: http://localhost:8000
+    ports:
+      - "5174:5174"
 
   worker_rust:
     build: ../services/worker-rust/mass_pdf_worker
     container_name: rust_worker
     depends_on:
-      - flask
       - api
+      - flask
     volumes:
       - ../pipelines/etl/pdfs:/pdfs
     environment:
-      FLASK_EMBED_URL: ${FLASK_EMBED_URL}
       FASTAPI_URL: ${FASTAPI_URL}
     command: ["mass_pdf_worker"]
-
 
 volumes:
   postgres_data:

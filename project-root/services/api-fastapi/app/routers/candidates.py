@@ -5,7 +5,7 @@ from app.core.database import AsyncSessionLocal
 from app.models.candidate import Candidate
 from app.schemas.candidate import CandidateCreate, CandidateUpdate, CandidateOut
 
-router = APIRouter(prefix="/candidates", tags=["Candidates"])
+router = APIRouter()
 
 async def get_db():
     async with AsyncSessionLocal() as session:

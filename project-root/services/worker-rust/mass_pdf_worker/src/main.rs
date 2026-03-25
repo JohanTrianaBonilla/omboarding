@@ -1,24 +1,23 @@
+use anyhow::Result;
 use rayon::prelude::*;
-use walkdir::WalkDir;
 use reqwest::blocking::Client;
 use serde::Serialize;
-use anyhow::Result;
+use std::env;
+use walkdir::WalkDir;
 
 #[derive(Serialize)]
 struct PdfPayload {
     file_path: String,
 }
 
-const ETL_URL: &str = "http://localhost:8002/run-etl"; 
-// ← este endpoint lo vamos a crear en Python en el siguiente paso
-
 fn main() -> Result<()> {
-    println!("🚀 Worker Rust – Procesamiento masivo de PDFs iniciado...\n");
+    println!("Mass PDF worker iniciado");
 
     let client = Client::new();
+    let fastapi_url = env::var("FASTAPI_URL").unwrap_or_else(|_| "http://api:8000".to_string());
+    let etl_url = format!("{}/files/run-etl", fastapi_url.trim_end_matches('/'));
 
-    // Recorre la carpeta /pdfs/
-    let pdf_paths: Vec<String> = WalkDir::new("./pdfs")
+    let pdf_paths: Vec<String> = WalkDir::new("/pdfs")
         .into_iter()
         .filter_map(|e| e.ok())
         .filter(|e| e.path().is_file())
@@ -26,29 +25,29 @@ fn main() -> Result<()> {
         .map(|e| e.path().display().to_string())
         .collect();
 
-    println!("📄 Encontrados {} PDFs para procesar.\n", pdf_paths.len());
+    println!("Encontrados {} PDFs para procesar", pdf_paths.len());
 
     pdf_paths.par_iter().for_each(|pdf| {
-        println!("➡️ Procesando: {}", pdf);
+        println!("Procesando {}", pdf);
 
         let payload = PdfPayload {
             file_path: pdf.to_string(),
         };
 
-        let response = client.post(ETL_URL).json(&payload).send();
+        let response = client.post(&etl_url).json(&payload).send();
 
         match response {
             Ok(res) => {
                 if res.status().is_success() {
-                    println!("   ✔ Procesado correctamente\n");
+                    println!("Procesado correctamente");
                 } else {
-                    println!("   ❌ Error en ETL (HTTP {})\n", res.status());
+                    println!("Error en ETL (HTTP {})", res.status());
                 }
             }
-            Err(err) => println!("   ❌ Error enviando al ETL: {}\n", err),
+            Err(err) => println!("Error enviando al ETL: {}", err),
         }
     });
 
-    println!("🏁 Procesamiento masivo completado.");
+    println!("Procesamiento masivo completado");
     Ok(())
 }

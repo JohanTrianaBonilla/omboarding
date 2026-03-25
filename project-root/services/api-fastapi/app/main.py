@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import candidates, search, insights
-from app.routers.upload import router as upload_router
 from app.core.database import init_db
+from app.models.candidate import Candidate  # noqa: F401
+from app.routers import candidates, insights, search
+from app.routers.upload import router as upload_router
 from dotenv import load_dotenv
 
 
